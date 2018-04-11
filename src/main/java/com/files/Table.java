@@ -14,6 +14,7 @@ public class Table {
 			for(int count = 0; count<currentChars.length; count++) {
 				if(currentChars[count] ==  delimiter) {
 					header.add("Stuff");
+					Row<String> row = new Row<String>(currentLine,delimiter);
 				}
 			}
 		}	
