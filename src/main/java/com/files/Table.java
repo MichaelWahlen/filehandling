@@ -11,9 +11,10 @@ public class Table {
 	public Table(List<String> tableContents, char delimiter) {
 		for(String currentLine: tableContents) {
 			char[] currentChars = currentLine.toCharArray();
-		}
 			for(int count = 0; count<currentChars.length; count++) {
-				
+				if(currentChars[count] ==  delimiter) {
+					header.add("Stuff");
+				}
 			}
 		}	
 		
