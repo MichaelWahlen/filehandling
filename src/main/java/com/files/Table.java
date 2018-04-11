@@ -15,7 +15,7 @@ public class Table {
 				if(currentChars[count] ==  delimiter) {
 					header.add("Stuff");
 					Row<String> row = new Row<String>(currentLine,delimiter);
-					
+					// i am gone
 				}
 			}
 		}	
