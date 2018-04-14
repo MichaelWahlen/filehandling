@@ -6,18 +6,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import main.java.com.files.Data;
+import main.java.com.files.Cell;
 import main.java.com.files.DataStatus;
 
-class DataAtomTest {
+class ElementTest {
 		
-	Data<String> atom;
+	Cell<String> atom;
 	
 	  @BeforeEach
 	  public void setUp() throws Exception {
-	    atom = new Data<String>("FirstValue");
-	    atom.addValue("SecondValue", true);
-	    atom.addValue("ThirdValue", false);
+	    atom = new Cell<String>("FirstValue");
+	    atom.changeToValue("SecondValue", true);
+	    atom.changeToValue("ThirdValue", false);
 	  }	
 	
 	@Test
@@ -31,28 +31,28 @@ class DataAtomTest {
 	@Test
 	@DisplayName("Adding a changed and not valid value")
 	void addChangedValid() {
-		atom.addValue("FourthValue", false);
+		atom.changeToValue("FourthValue", false);
 		assertEquals(atom.getStatus(),DataStatus.CHANGED_NOK);
 	}
 	
 	@Test
 	@DisplayName("Adding a changed and valid value")
 	void addChangedNotValid() {
-		atom.addValue("FourthValue", true);		
+		atom.changeToValue("FourthValue", true);		
 		assertEquals(atom.getStatus(),DataStatus.CHANGED_OK);
 	}
 	
 	@Test
 	@DisplayName("Adding a not-changed and not-valid value")
 	void addNotChangedNotValid() {
-		atom.addValue("FirstValue", false);
+		atom.changeToValue("FirstValue", false);
 		assertEquals(atom.getStatus(),DataStatus.UNCHANGED_NOK);
 	}
 	
 	@Test
 	@DisplayName("Adding a not-changed and valid value")
 	void addNotChangedValid() {
-		atom.addValue("FirstValue", true);
+		atom.changeToValue("FirstValue", true);
 		assertEquals(atom.getStatus(),DataStatus.UNCHANGED_OK);
 	}	
 	
@@ -73,13 +73,13 @@ class DataAtomTest {
 		atom.changeToNextValue();
 		assertEquals(atom.getCurrentValue(),"SecondValue");
 		assertEquals(atom.getStatus(),DataStatus.CHANGED_OK);		
-		atom.addValue("FourthValue", true);
+		atom.changeToValue("FourthValue", true);
 		assertEquals(atom.getCurrentValue(),"FourthValue");
 		assertEquals(atom.getStatus(),DataStatus.CHANGED_OK);
 		atom.changeToNextValue();
 		assertEquals(atom.getCurrentValue(),"FourthValue");
 		assertEquals(atom.getStatus(),DataStatus.CHANGED_OK);
-		atom.addValue("FirstValue", true);
+		atom.changeToValue("FirstValue", true);
 		assertEquals(atom.getCurrentValue(),"FirstValue");
 		assertEquals(atom.getStatus(),DataStatus.UNCHANGED_OK);
 		atom.changeToPreviousValue();
