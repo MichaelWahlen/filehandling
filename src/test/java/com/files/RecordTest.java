@@ -9,15 +9,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import main.java.com.files.DataStatus;
-import main.java.com.files.Row;
+import main.java.com.files.Record;
 
 class RecordTest {
 	
-	Row<String> row;
+	Record<String> row;
 	
 	@BeforeEach
 	public void setUp() throws Exception {
-		row = new Row<String>();
+		row = new Record<String>();
 		row.add("Alia");
 		row.add("Iacta");
 		row.add("Est");		
@@ -73,25 +73,44 @@ class RecordTest {
 	@Test
 	@DisplayName("Valid update")
 	void validUpdate() {
-		row.addValueAt(0, "Alia", true);
+		row.changeValueAt(0, "Alia", true);
 		assertEquals(row.getStatus(),DataStatus.UNCHANGED_OK);
-		row.addValueAt(1, "NewValue", true);
-		assertEquals(row.getStatus(),DataStatus.CHANGED_OK);		
+		assertEquals(row.getSize(),3);
+		row.changeValueAt(1, "NewValue", true);
+		assertEquals(row.getStatus(),DataStatus.CHANGED_OK);
+		row.changeValueAt(10, "NewValue", true);
+		assertEquals(row.getSize(),3);
 	}
 	
 	@Test
 	@DisplayName("Invalid update: \"╯°□°）╯\"")
 	void inValidUpdate() {
-		row.addValueAt(0, "Alia", false);
+		row.changeValueAt(0, "Alia", false);
 		assertEquals(row.getStatus(),DataStatus.UNCHANGED_NOK);
-		row.addValueAt(1, "NewValue", false);
+		row.changeValueAt(1, "NewValue", false);
 		assertEquals(row.getStatus(),DataStatus.CHANGED_NOK);		
+	}
+	
+	@Test
+	@DisplayName("Setting prescribed length, to shorter")
+	void settingLengthToShorter() {
+		row.setPrescribedSize(1);
+		row.getAll().get(0);
+		assertThrows(IndexOutOfBoundsException.class,				
+				()->{row.getAll().get(1);});
+	}
+	
+	@Test
+	@DisplayName("Setting prescribed length, to longer")
+	void settingLengthToLonger() {
+		row.setPrescribedSize(5);
+		assertNull(row.getAt(4));
 	}
 	
 	@Test
 	@DisplayName("Remove and valid")
 	void removeAndValidate() {
-		row.addValueAt(0, "Alia", false);
+		row.changeValueAt(0, "Alia", false);
 		assertEquals(row.getStatus(),DataStatus.UNCHANGED_NOK);
 		row.remove(0);
 		assertEquals(row.getStatus(),DataStatus.UNCHANGED_OK);
@@ -100,11 +119,11 @@ class RecordTest {
 	@Test
 	@DisplayName("Move forward and backward")
 	void moveForwardAndBackward() {
-		row.addValueAt(0, "Abc", true);
-		row.addValueAt(0, "Def", false);
-		row.addValueAt(0, "Ghi", false);
-		row.addValueAt(1, "Abc", true);
-		row.addValueAt(1, "Def", false);		
+		row.changeValueAt(0, "Abc", true);
+		row.changeValueAt(0, "Def", false);
+		row.changeValueAt(0, "Ghi", false);
+		row.changeValueAt(1, "Abc", true);
+		row.changeValueAt(1, "Def", false);		
 		assertEquals(row.getAt(0),"Ghi");
 		assertEquals(row.getAt(1),"Def");
 		assertEquals(row.getAt(2),"Est");
@@ -121,8 +140,8 @@ class RecordTest {
 		assertEquals(row.getAt(1),"Abc");
 		assertEquals(row.getAt(2),"Est");
 		assertEquals(row.getStatus(),DataStatus.CHANGED_OK);
-		row.addValueAt(0, "Alia", true);
-		row.addValueAt(1, "Iacta", true);
+		row.changeValueAt(0, "Alia", true);
+		row.changeValueAt(1, "Iacta", true);
 		row.nextValue();
 		row.nextValue();
 		row.previousValue();

@@ -6,7 +6,7 @@ public enum DataStatus {
 	CHANGED_OK(2),
 	UNCHANGED_NOK(3),
 	CHANGED_NOK(4),	
-	INCOMPLETE(5);
+	FAULTY(5);
 	
 	private int priority;
 	

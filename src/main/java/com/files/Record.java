@@ -3,14 +3,34 @@ package main.java.com.files;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Row<T> {
+public class Record<T> {
 	private List<Cell<T>> cells = new ArrayList<Cell<T>>(); 
+	private int prescribedSize = 0;
+	private boolean isIncomplete = false;
+	private boolean isTooLarge = false;
 	
-	public Row (){		
+	public Record (){		
 	}
 	
-	public void addValueAt(int location, T newValue, boolean isValid) {
-		cells.get(location).changeToValue(newValue, isValid);
+	public void changeValueAt(int location, T newValue, boolean isValid) {
+		if(cells.size() > location && location >= 0) {
+			cells.get(location).changeToValue(newValue, isValid);
+		} 
+	}
+	
+	public void setPrescribedSize(int size) {
+		this.prescribedSize = size;
+		if(prescribedSize > 0) {
+			if(cells.size() > prescribedSize) {
+				cells = cells.subList(0, prescribedSize);
+				isTooLarge = true;
+			} else if(cells.size() < prescribedSize){
+				for (int i = 0; i < (prescribedSize-cells.size());i++) {
+					cells.add(null);
+				}
+				isIncomplete = true;
+			}
+		}		
 	}
 	
 	public void add(T newValue) {
@@ -34,14 +54,18 @@ public class Row<T> {
 	
 	public DataStatus getStatus() {
 		DataStatus rowStatus = DataStatus.UNPROCESSED;
-		if (cells.size() > 1) {
-			for(Cell<T> cell:cells) {
-				DataStatus cellStatus = cell.getStatus();
-				if (cellStatus.getPriority() > rowStatus.getPriority()) {
-					rowStatus = cellStatus;
-				}	    
+		if (!(isIncomplete || isTooLarge)) {
+			if (cells.size() > 1) {
+				for(Cell<T> cell:cells) {
+					DataStatus cellStatus = cell.getStatus();
+					if (cellStatus.getPriority() > rowStatus.getPriority()) {
+						rowStatus = cellStatus;
+					}	    
+				}
 			}
-		}
+		} else {
+			rowStatus = DataStatus.FAULTY;
+		}		
 		return rowStatus;
 	}
 	
@@ -49,9 +73,13 @@ public class Row<T> {
 		List<T> returnList = new ArrayList<T>();
 		if (cells.size() > 0) {
 			for(Cell<T> cell:cells) {
-				returnList.add(cell.getCurrentValue());
+				if (cell != null) {
+					returnList.add(cell.getCurrentValue());
+				} else {
+					returnList.add(null);
+				}
 			}
-		}
+		}		
 		return returnList;
 	}
 	
