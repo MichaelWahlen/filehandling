@@ -10,11 +10,12 @@ import org.junit.jupiter.api.Test;
 
 import main.java.com.data.Table;
 import main.java.com.file.LocalFolder;
-
+import main.java.com.util.HibernateUtility;
 import main.java.com.util.StringUtil;
 import main.java.com.util.StringsToTables;
 
-class ConversionToTable {
+class CreateAndInsert {
+
 	String baseballFolderPath ="";	
 	String tweetFolderPath = "";
 	LocalFolder baseballFolder;
@@ -22,25 +23,10 @@ class ConversionToTable {
 	
 	@BeforeEach
 	public void setUp() throws Exception {
-		baseballFolderPath = "src//test//resources//BaseBallTestData";	
-		tweetFolderPath = "src//test//resources//Tweets";
-		baseballFolder = new LocalFolder(baseballFolderPath);
-		tweetFolder = new LocalFolder(tweetFolderPath);
+		baseballFolderPath = "src//test//resources//BaseBallTestData";		
+		baseballFolder = new LocalFolder(baseballFolderPath);		
 		baseballFolder.loadContainedFiles("","csv");
-	}
-	@Test
-	void convertFile() {		
-		Map<String, Table> tables = StringsToTables.convertFolderToTable(baseballFolder.getAllFiles(),',');
-		assertEquals("ansonca01",tables.get("Appearances.csv").getColumn(3).get(4));
-	}
-	@Test
-	void convertToSQL() {
-		
-		Map<String, Table> tables = StringsToTables.convertFolderToTable(baseballFolder.getFile("Parks.csv"),',');
-		assertEquals("CREATE TABLE PARKS(ID int NOT NULL AUTO_INCREMENT, PARKKEY VARCHAR(255),PARKNAME VARCHAR(255),PARKALIAS VARCHAR(255),CITY VARCHAR(255),STATE VARCHAR(255),COUNTRY VARCHAR(255),PRIMARY KEY (ID))",
-				StringUtil.getCreateTableString("Parks", tables.get("Parks.csv").getHeaderAsString()));
-		
-	}
+	}	
 	
 	@Test
 	void convertToInsert() {	
@@ -49,6 +35,9 @@ class ConversionToTable {
 		List<List<String>> retrievedData = retrievedTable.getTable(false).subList(1, 3);		
 		assertEquals("INSERT INTO PARKS VALUES(0,\"ALT01\",\"Columbia Park\",\"\",\"Altoona\",\"PA\",\"US\"),(0,\"ANA01\",\"Angel Stadium of Anaheim\",\"Edison Field; Anaheim Stadium\",\"Anaheim\",\"CA\",\"US\")",
 				StringUtil.getInsertString("Parks", retrievedData, true));
+		// requers a bit too much understanding and has to be refactored. Idea would be to indicate name of table//contents/and whether it's auto ID increment
+		HibernateUtility.performSQL(StringUtil.getCreateTableString("Parks", tables.get("Parks.csv").getHeaderAsString()));
+		HibernateUtility.performSQL(StringUtil.getInsertString("Parks", tables.get("Parks.csv").getTable(false),true));
 	}
-	
+
 }
