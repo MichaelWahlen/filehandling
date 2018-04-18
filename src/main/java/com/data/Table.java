@@ -3,13 +3,15 @@ package main.java.com.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.java.com.util.StringUtil;
+
 
 public class Table {	
 	
-	private List<Record<String>> rows = new ArrayList<Record<String>>();
-	private List<String> header = new ArrayList<String>();
+	private List<Record<String>> rows = new ArrayList<Record<String>>();	
 	private List<HeaderItem> headerItems = new ArrayList<HeaderItem>();
 	private int maxRowSize = 0;	
+	private String name;
 	
 	public Table() {		
 	}
@@ -18,8 +20,8 @@ public class Table {
 		int currentRowSize = 0;
 		if (table.size() > 0) {
 			if (hasHeader) {
-				header = table.get(0);
-				for (String string:header) {
+				List<String> strings = table.get(0);
+				for (String string:strings) {
 					HeaderItem header = new HeaderItem(string);
 					headerItems.add(header);
 				}				
@@ -42,24 +44,24 @@ public class Table {
 		}
 	}
 	
-	public void applyHeaderSize() {
-		if (headerItems.size()> 0) {
-			for(Record<String> row:rows) {
-				row.setPrescribedSize(headerItems.size());
-			}
-		}
+	public void setName(String name) {
+		this.name = StringUtil.extractAlphaNumeric(name).toUpperCase();
+	}
+	
+	public void applyHeaderSize() {		
+		for(Record<String> row:rows) {
+			row.setPrescribedSize(headerItems.size());
+		}		
 	}
 	
 	public List<List<String>> getTable(boolean returnHeader){
 		List<List<String>> returnList = new ArrayList<List<String>>();
-		if (header.size() > 0 && returnHeader) {
-			returnList.add(header);
-		}
-		if(rows.size()>0) {
-			for(Record<String> record:rows) {
-				returnList.add(record.getAll());
-			}
-		}
+		if (headerItems.size() > 0 && returnHeader) {			
+			returnList.add(getHeaders());
+		}		
+		for(Record<String> record:rows) {
+			returnList.add(record.getAll());
+		}		
 		return returnList;
 	}	
 	
@@ -77,9 +79,8 @@ public class Table {
 	
 	public DataStatus getRowStatus(int row) {
 		DataStatus returnStatus = DataStatus.UNPROCESSED;
-		if(row < rows.size()) {
-			Record<String> retrievedRow = rows.get(row);
-			returnStatus = retrievedRow.getStatus();			
+		if(row < rows.size()) {			
+			returnStatus = rows.get(row).getStatus();			
 		}
 		return returnStatus;
 	}
@@ -106,16 +107,19 @@ public class Table {
 		return returnList;
 	}
 	
-	public String getHeaderAsString() {
-		String returnValue = "";
-		if (headerItems.size() > 0) {
-			for (HeaderItem headerItem: headerItems) {				
-				returnValue = returnValue +"," +headerItem.toString();
-			}
-		}
-		if (returnValue.length() > 0) {
-			returnValue = returnValue.substring(1);
+	public List<String> getHeaders() {
+		List<String> returnValue = new ArrayList<String>();
+		for(HeaderItem headerItem:headerItems) {
+			returnValue.add(headerItem.toString());
 		}		
 		return returnValue;
+	}
+	
+	public String getCreateSQL() {		
+		return StringUtil.getCreateTableString(name, getHeaders(), true);
+	}
+	
+	public String getInsertSQL() {
+		return StringUtil.getInsertString(name, getTable(!(headerItems.size()>0)), true);
 	}
 }

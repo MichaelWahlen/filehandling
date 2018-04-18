@@ -9,7 +9,7 @@ import main.java.com.data.Table;
 
 public class StringsToTables {
 	
-	public static Map<String, Table> convertFolderToTable(Map<String, List<String>> namesAndContent, char delimiter){
+	public static Map<String, Table> seperatedFilesToTables(Map<String, List<String>> namesAndContent, char delimiter){
 		Map<String, Table> returnValue = new HashMap<String, Table>();
 		if (namesAndContent.size() > 0) {
 			for(Map.Entry<String, List<String>> entry : namesAndContent.entrySet()) {
@@ -21,6 +21,7 @@ public class StringsToTables {
 				}
 				Table newTable = new Table();
 				newTable.setTable(stringLists, true);
+				newTable.setName(entry.getKey());
 				returnValue.put(entry.getKey(), newTable);			
 			}
 		}		

@@ -40,10 +40,10 @@ class Folder {
 	@Test
 	void loadAllContentCount() {
 		baseballFolder.loadContainedFiles("","csv");
-		List<String> returns = baseballFolder.getAllFiles().get("AwardsManagers.csv");		
+		List<String> returns = baseballFolder.getAllFiles().get("AwardsManagers");		
 		assertEquals(180,returns.size());
 		tweetFolder.loadContainedFiles("","txt");
-		returns = tweetFolder.getAllFiles().get("bbchealth.txt");
+		returns = tweetFolder.getAllFiles().get("bbchealth");
 		assertEquals(3929,returns.size());
 	}
 	

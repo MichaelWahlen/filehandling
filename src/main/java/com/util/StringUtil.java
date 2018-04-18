@@ -19,14 +19,31 @@ public class StringUtil {
 		return row;
 	}
 	
-	public static String getCreateTableString(String tableName, String columns) {
-		String returnValue = "CREATE TABLE " + tableName.toUpperCase() + "(ID int NOT NULL AUTO_INCREMENT, " + columns + ",PRIMARY KEY (ID))";		
+	public static String getCreateTableString(String tableName, List<String> columnNames, boolean hasAutoIncrement) {
+		String returnValue = "";
+		String columns = toCommaSeperatedList(columnNames);
+		if (hasAutoIncrement) {
+			returnValue = "CREATE TABLE " + tableName.toUpperCase() + " (ID int NOT NULL AUTO_INCREMENT, " + columns + ",PRIMARY KEY (ID))";	
+		} else {
+			returnValue = "CREATE TABLE " + tableName.toUpperCase() + " (" + columns + ",PRIMARY KEY (ID))";	
+		}
 		return returnValue;
 	}
 	
     public static String extractAlphaNumeric(String input) {
         return input.replaceAll("[^A-Za-z0-9]", "");
     } 
+    
+    public static String toCommaSeperatedList(List<String> strings) {
+    	String returnValue = "";
+    	if (strings.size() > 0) {    		
+    		for (String string: strings) {
+    			returnValue = returnValue + "," + string;
+    		}
+    		returnValue = returnValue.substring(1);
+    	}
+    	return returnValue;
+    }
     
     public static String getInsertString(String tableName, List<List<String>> data, boolean hasAutoIncrement) {
     	String returnValue = "INSERT INTO " + tableName.toUpperCase() + " VALUES";

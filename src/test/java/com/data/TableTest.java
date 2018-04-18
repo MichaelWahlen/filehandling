@@ -149,7 +149,7 @@ class TableTest {
 	@Test
 	@DisplayName("Get header String")
 	void headerString() {
-		assertEquals("COLUMN1 VARCHAR(255),COLUMN2 VARCHAR(255),COLUMN3 VARCHAR(255)",table.getHeaderAsString());
+		assertEquals("COLUMN2 VARCHAR(255)",table.getHeaders().get(1));
 	}
 	
 }
