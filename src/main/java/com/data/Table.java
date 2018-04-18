@@ -8,6 +8,7 @@ public class Table {
 	
 	private List<Record<String>> rows = new ArrayList<Record<String>>();
 	private List<String> header = new ArrayList<String>();
+	private List<HeaderItem> headerItems = new ArrayList<HeaderItem>();
 	private int maxRowSize = 0;	
 	
 	public Table() {		
@@ -18,6 +19,10 @@ public class Table {
 		if (table.size() > 0) {
 			if (hasHeader) {
 				header = table.get(0);
+				for (String string:header) {
+					HeaderItem header = new HeaderItem(string);
+					headerItems.add(header);
+				}				
 				table.remove(0);			
 			}
 			if(table.size() > 0) {
@@ -38,16 +43,16 @@ public class Table {
 	}
 	
 	public void applyHeaderSize() {
-		if (header.size()> 0) {
+		if (headerItems.size()> 0) {
 			for(Record<String> row:rows) {
-				row.setPrescribedSize(header.size());
+				row.setPrescribedSize(headerItems.size());
 			}
 		}
 	}
 	
-	public List<List<String>> getTable(){
+	public List<List<String>> getTable(boolean returnHeader){
 		List<List<String>> returnList = new ArrayList<List<String>>();
-		if (header.size() > 0) {
+		if (header.size() > 0 && returnHeader) {
 			returnList.add(header);
 		}
 		if(rows.size()>0) {
@@ -99,5 +104,18 @@ public class Table {
 				returnList= rows.get(row).getAll();			
 		}
 		return returnList;
+	}
+	
+	public String getHeaderAsString() {
+		String returnValue = "";
+		if (headerItems.size() > 0) {
+			for (HeaderItem headerItem: headerItems) {				
+				returnValue = returnValue +"," +headerItem.toString();
+			}
+		}
+		if (returnValue.length() > 0) {
+			returnValue = returnValue.substring(1);
+		}		
+		return returnValue;
 	}
 }

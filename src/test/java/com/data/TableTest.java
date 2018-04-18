@@ -48,7 +48,7 @@ class TableTest {
 	@Test
 	@DisplayName("Test get table")
 	void testContentValues() {
-		List<List<String>> tableContents = table.getTable();
+		List<List<String>> tableContents = table.getTable(true);
 		assertEquals(tableContents.get(1).get(1),"2");
 		assertEquals(tableContents.get(5).get(1),"15");
 		assertEquals(tableContents.get(2).get(2),"6");		
@@ -105,7 +105,7 @@ class TableTest {
 		assertEquals(table.getRowStatus(1),DataStatus.UNCHANGED_OK);
 		assertEquals(table.getRowStatus(3),DataStatus.FAULTY);
 		assertEquals(table.getRowStatus(4),DataStatus.FAULTY);
-		List<List<String>> tableContents = table.getTable();
+		List<List<String>> tableContents = table.getTable(true);
 		assertEquals(tableContents.size(),6);
 		assertEquals(tableContents.get(5).size(),3);
 	}
@@ -145,4 +145,11 @@ class TableTest {
 		assertEquals(row.get(5),"flies");
 		assertNull(row.get(3));
 	}
+	
+	@Test
+	@DisplayName("Get header String")
+	void headerString() {
+		assertEquals("COLUMN1 VARCHAR(255),COLUMN2 VARCHAR(255),COLUMN3 VARCHAR(255)",table.getHeaderAsString());
+	}
+	
 }
