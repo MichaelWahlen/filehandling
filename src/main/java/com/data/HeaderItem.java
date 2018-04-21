@@ -14,8 +14,8 @@ public class HeaderItem {
 		setName(name);
 	}
 	
-	public String toString() {
-		return this.name + " "+ this.type + "(" + this.length + ")";
+	public String toString(String preface) {
+		return preface+"_"+this.name + " "+ this.type + "(" + this.length + ")";
 	}
 	
 	public void setName(String name) {

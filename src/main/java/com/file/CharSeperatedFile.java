@@ -50,7 +50,7 @@ public class CharSeperatedFile {
 		try {
 			reader = new BufferedReader(new FileReader (this.internalFile.getPath()));
 			while((line = reader.readLine()) != null) {
-                this.parsedRows.add(line);
+                this.parsedRows.add(line.replaceAll("\"", ""));
             }
 			reader.close();
 		} catch (Exception e) {			

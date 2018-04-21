@@ -11,9 +11,13 @@ public class Table {
 	private List<Record<String>> rows = new ArrayList<Record<String>>();	
 	private List<HeaderItem> headerItems = new ArrayList<HeaderItem>();
 	private int maxRowSize = 0;	
-	private String name;
+	private String name = "";
 	
 	public Table() {		
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public void setTable(List<List<String>> table, boolean hasHeader) {
@@ -54,11 +58,8 @@ public class Table {
 		}		
 	}
 	
-	public List<List<String>> getTable(boolean returnHeader){
-		List<List<String>> returnList = new ArrayList<List<String>>();
-		if (headerItems.size() > 0 && returnHeader) {			
-			returnList.add(getHeaders());
-		}		
+	public List<List<String>> getTableContents(){
+		List<List<String>> returnList = new ArrayList<List<String>>();				
 		for(Record<String> record:rows) {
 			returnList.add(record.getAll());
 		}		
@@ -107,19 +108,12 @@ public class Table {
 		return returnList;
 	}
 	
-	public List<String> getHeaders() {
+	public List<String> getHeader() {
 		List<String> returnValue = new ArrayList<String>();
 		for(HeaderItem headerItem:headerItems) {
-			returnValue.add(headerItem.toString());
+			returnValue.add(headerItem.toString(name));
 		}		
 		return returnValue;
 	}
-	
-	public String getCreateSQL() {		
-		return StringUtil.getCreateTableString(name, getHeaders(), true);
-	}
-	
-	public String getInsertSQL() {
-		return StringUtil.getInsertString(name, getTable(!(headerItems.size()>0)), true);
-	}
+
 }

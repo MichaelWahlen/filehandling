@@ -1,8 +1,8 @@
 package main.java.com.file;
 
 import java.io.File;
+
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -27,21 +27,22 @@ public class LocalFolder {
 		HashMap<String, List<String>> returnList = new HashMap<String, List<String>>();		
 		for(Map.Entry<String, CharSeperatedFile> entry : loadedFiles.entrySet()) {
 			CharSeperatedFile file = entry.getValue();
-			String key = file.getFileName().substring(0,file.getFileName().lastIndexOf('.'));	
+			String key = file.getFileName().substring(0,file.getFileName().lastIndexOf('.')).toUpperCase();	
 			returnList.put(key,file.getParsedRows());
 		}			
 		return returnList;
-	}  
+	}
+	
+
 	
 	public HashMap<String, List<String>> getFile(String fileName) {		
 		HashMap<String, List<String>> returnList = new HashMap<String, List<String>>();		
 		if (loadedFiles.size()>0) {
 				CharSeperatedFile file = loadedFiles.get(fileName);
 				if(file != null) {
-					String key = file.getFileName().substring(0,file.getFileName().lastIndexOf('.'));					
+					String key = file.getFileName().substring(0,file.getFileName().lastIndexOf('.')).toUpperCase();					
 					returnList.put(key,file.getParsedRows());
-				}
-			
+				}			
 		}		
 		return returnList;
 	}   
@@ -55,7 +56,7 @@ public class LocalFolder {
 					lastIndex = name.lastIndexOf('.');
 					if (file.isFile() && lastIndex != -1) {																		
 							if(name.substring(lastIndex+1).equals(fileExtension) && (name.contains(fileIdentifier))) {
-								loadedFiles.put(name.substring(0,lastIndex),new CharSeperatedFile(file));
+								loadedFiles.put(name.substring(0,lastIndex).toUpperCase(),new CharSeperatedFile(file));
 							} 
 						
 					}
