@@ -3,15 +3,17 @@ package test.java.com.data;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+
 import main.java.com.data.Database;
 import main.java.com.data.Table;
 import main.java.com.file.LocalFolder;
-import main.java.com.util.StringUtil;
+
 
 class ConversionToTable {
 		
@@ -43,27 +45,9 @@ class ConversionToTable {
 		tableNames.add("PEOPLE");
 		List<String> keys = new ArrayList<String>();
 		keys.add("APPEARANCES_PLAYERID");
-		keys.add("PEOPLE_PLAYERID");
-		Map<String, List<String>> addMyCSV = new HashMap<String, List<String>>();
-		addMyCSV.put("dummy", database.getInnerJoin(keys, tableNames,','));		
-		database.addCSVData(true, addMyCSV, ',');
-		database.commitTable("DUMMY");
-		
+		keys.add("PEOPLE_PLAYERID");		
+		database.commitInnerJoin(keys, tableNames);		
 	}
-	
-	@Test
-	void joinSQL() {
-		List<String> tableNames = new ArrayList<String>();
-		tableNames.add("table1");
-		tableNames.add("table2");
-		tableNames.add("table3");
-		List<String> myKey = new ArrayList<String>();
-		myKey.add("MyKey");
-		myKey.add("MyKey");
-		myKey.add("MyKey");
-		assertEquals("SELECT * FROM table1 JOIN table2 ON table1.MyKey = table2.MyKey JOIN table3 ON table2.MyKey = table3.MyKey",StringUtil.getInnerJoinString(myKey, tableNames));
-	}
-	
 
 
 }

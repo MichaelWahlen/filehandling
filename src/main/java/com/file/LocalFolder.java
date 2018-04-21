@@ -33,8 +33,6 @@ public class LocalFolder {
 		return returnList;
 	}
 	
-
-	
 	public HashMap<String, List<String>> getFile(String fileName) {		
 		HashMap<String, List<String>> returnList = new HashMap<String, List<String>>();		
 		if (loadedFiles.size()>0) {

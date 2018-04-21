@@ -1,7 +1,8 @@
-package main.java.com.util;
-
+package main.java.com.SQL;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -9,7 +10,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 
-public class HibernateUtility {
+public class PerformSQL {
 	private static final SessionFactory sessionFactory;
 	static{
 		try{
@@ -36,6 +37,7 @@ public class HibernateUtility {
 			transaction.commit();    		
 		} catch(RuntimeException e) {
 			try {
+				e.printStackTrace();
 				transaction.rollback();
 			} catch(RuntimeException rbe) {
 				e.printStackTrace();
@@ -48,22 +50,17 @@ public class HibernateUtility {
 		}
 	}
 	
-
-	@SuppressWarnings("unchecked")
-	public static List<String> performSelect(String nativeSql, char delimiter){
-		List<String> returnValue = new ArrayList<String>();
+	public static List<String>  performSelect(String nativeSql) {		
 		Session session = null;
-		Transaction transaction = null;
+		List<String> returnValue = new ArrayList<String>();
 		try{
 			session = getSessionFactory().openSession();
-			transaction = session.beginTransaction();			
-			@SuppressWarnings("rawtypes")
-			Query query = session.createNativeQuery(nativeSql);	
+			Query query = session.createNativeQuery(nativeSql);
 			List<Object[]> wut = query.getResultList();
 			int count = 0;
 			Object test = wut.get(0);
 			if(test instanceof String) {
-				String returnString = count + "";
+				String returnString = "ID";
 				for(Object string: wut) {
 					returnString = returnString + ","+string;
 				}
@@ -84,20 +81,31 @@ public class HibernateUtility {
 				returnValue.add(returnString);
 			}
 			}
-			transaction.commit();    		
-		} catch(RuntimeException e) {
-			try {
-				System.out.println("error");
-				e.printStackTrace();
-				transaction.rollback();
-			} catch(RuntimeException rbe) {
-				System.err.printf("Failed to rollback.");
-			}			
-		} finally {
-			if(session!=null) {
-				session.close();
-			}    		
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 		return returnValue;
 	}
+	
+	public static String  getColumnNames(String nativeSql) {		
+		Session session = null;
+		String returnValue = "";
+		try{
+			session = getSessionFactory().openSession();
+			Query query = session.createNativeQuery(nativeSql);
+			List<Object[]> wut = query.getResultList();
+			int count = 0;
+			Object test = wut.get(0);
+			if(test instanceof String) {
+				returnValue = "ID";
+				for(Object string: wut) {
+					returnValue = returnValue + ","+string;
+				}								
+			}			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return returnValue;
+	}
+
 }
