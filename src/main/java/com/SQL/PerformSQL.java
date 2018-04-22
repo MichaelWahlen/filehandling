@@ -2,7 +2,6 @@ package main.java.com.SQL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -35,54 +34,44 @@ public class PerformSQL {
 			Query query = session.createNativeQuery(nativeSql);			
 			query.executeUpdate();		  
 			transaction.commit();    		
-		} catch(RuntimeException e) {
-			try {
-				e.printStackTrace();
-				transaction.rollback();
-			} catch(RuntimeException rbe) {
-				e.printStackTrace();
-				System.err.printf("Failed to rollback.");
-			}			
-		} finally {
+		} catch(Exception e) {
+			e.printStackTrace();
+		}  finally {
 			if(session!=null) {
 				session.close();
 			}    		
 		}
 	}
 	
-	public static List<String>  performSelect(String nativeSql) {		
+	public static List<String>  performSelect(String nativeSql) {
 		Session session = null;
 		List<String> returnValue = new ArrayList<String>();
 		try{
 			session = getSessionFactory().openSession();
-			Query query = session.createNativeQuery(nativeSql);
-			List<Object[]> wut = query.getResultList();
-			int count = 0;
-			Object test = wut.get(0);
-			if(test instanceof String) {
-				String returnString = "ID";
-				for(Object string: wut) {
-					returnString = returnString + ","+string;
-				}
-				returnValue.add(returnString);				
-			} else {			
-			for (Object[] objects: wut) {				
-				String returnString = count + "";
+			@SuppressWarnings("unchecked")
+			Query<Object[]> query = session.createNativeQuery(nativeSql);
+			List<Object[]> queryResult = query.getResultList();
+			int count = 0;					
+			for (Object[] objects: queryResult) {				
+				StringBuilder returnString = new StringBuilder(count + "");
 				for(Object object: objects) {
 					if (object instanceof Integer) {
-						returnString = returnString + "," + Integer.toString((Integer) object);						
+						returnString.append("," + Integer.toString((Integer) object));						
 					} else if (object.hashCode() == 0){
-						returnString = returnString + ","+"";
+						returnString.append(",");
 					}
 					else {
-						returnString = returnString + ","+object;
+						returnString.append(","+object);
 					}
 				}
-				returnValue.add(returnString);
-			}
-			}
+				returnValue.add(returnString.toString());
+			}			
 		} catch(Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(session!=null) {
+				session.close();
+			}    		
 		}
 		return returnValue;
 	}
@@ -92,18 +81,22 @@ public class PerformSQL {
 		String returnValue = "";
 		try{
 			session = getSessionFactory().openSession();
-			Query query = session.createNativeQuery(nativeSql);
-			List<Object[]> wut = query.getResultList();
-			int count = 0;
-			Object test = wut.get(0);
+			@SuppressWarnings("unchecked")
+			Query<Object[]> query = session.createNativeQuery(nativeSql);
+			List<Object[]> queryResult = query.getResultList();
+			Object test = queryResult.get(0);
 			if(test instanceof String) {
 				returnValue = "ID";
-				for(Object string: wut) {
+				for(Object string: queryResult) {
 					returnValue = returnValue + ","+string;
 				}								
 			}			
 		} catch(Exception e) {
 			e.printStackTrace();
+		} finally {
+			if(session!=null) {
+				session.close();
+			}    		
 		}
 		return returnValue;
 	}

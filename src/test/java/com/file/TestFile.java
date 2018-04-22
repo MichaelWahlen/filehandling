@@ -46,8 +46,8 @@ class TestFile {
 	
 	@Test
 	void deleteFile() {
-		file2.storeFileAt("C://Users//Sander//eclipse-workspace//filehandling//src//test//resources//BaseBallTestData//Storage","COPIED_OFAppearances.csv");
-		File temp = new File("C://Users//Sander//eclipse-workspace//filehandling//src//test//resources//BaseBallTestData//Storage//COPIED_OFAppearances.csv");		
+		file2.storeFileAt("src//test//resources//BaseBallTestData//Storage","COPIED_OFAppearances.csv");
+		File temp = new File("src//test//resources//BaseBallTestData//Storage//COPIED_OFAppearances.csv");		
 		assertTrue(temp.delete());
 	}
 	

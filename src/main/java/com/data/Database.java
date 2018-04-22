@@ -50,29 +50,31 @@ public class Database {
 		PerformSQL.performDDL(insertSQL);	
 	}
 	
-	public void commitInnerJoin(List<String> key, List<String> tableNames){		
-		// not yet properly refactored but works. Steps are, create indexes for all the columns in the required tables
-		// next step: Commit those ADD INDEX, one by one as hiber doesnt do multiple commits
-		// next step create the string for the creation of the joined table, giving it name TESTING. Syntax is CREATE TABLE X AS SELECT * FROM X JOIN Y ON X.A=Y.A
-		// next step commit the creation string
-		// next step: retrieve all via Select * from TESTING
-		// next step: add the column names via SELECT FROM SCHEMA.COLUMNS
-		// next step: print out some lines
-		// requires refactor + error handling for all the problems with running craete when there is already a table
-		
-		
-		
-		List<String> addIndex = BuildSQL.addIndexOnTable(key, tableNames);
-		for(String string: addIndex) {
-			PerformSQL.performDDL(string);
-		}
-		String test = "CREATE TABLE testing AS (" + BuildSQL.getInnerJoinString(key, tableNames) +")";
-		PerformSQL.performDDL(test);
-		List<String> retrieve  = PerformSQL.performSelect("SELECT * FROM TESTING");	
-		retrieve.add(0,PerformSQL.getColumnNames("SELECT column_name FROM information_schema.columns WHERE table_name in ('TESTING')"));
-		System.out.println(retrieve.get(0));
-		System.out.println(retrieve.get(1));
-		System.out.println(retrieve.get(3));
+	private void addIndexes(List<String> key, List<String> tableNames) {
+		for(int i = 0 ; i<tableNames.size();i++) {
+			PerformSQL.performDDL(BuildSQL.addIndexOnTable(key.get(i), tableNames.get(i)));			
+		}		
 	}
 	
+	public void commitInnerJoin(String tableName,List<String> key, List<String> tableNames){
+		addIndexes(key,tableNames);		
+		PerformSQL.performDDL(BuildSQL.getCreateAsSQL(tableName,BuildSQL.getInnerJoinSelect(key, tableNames)));
+	}
+	
+	public List<String> retrieveTableContent(String tableName) {
+		List<String> returnValue = PerformSQL.performSelect(BuildSQL.getSelect(tableName));	
+		returnValue.add(0,PerformSQL.getColumnNames(BuildSQL.getColumnNames(tableName)));
+		return returnValue;		
+	}
+	
+	public void dropTables(List<String> tableNames) {
+		for(String string: tableNames) {
+			String SQL = BuildSQL.getDrop(string);
+			PerformSQL.performDDL(SQL);
+		}		
+	}
+	
+	public List<String> getTableNames(){
+		return null;		
+	}
 }

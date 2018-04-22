@@ -8,8 +8,8 @@ import main.java.com.util.StringUtil;
 
 public class Table {	
 	
-	private List<Record<String>> rows = new ArrayList<Record<String>>();	
-	private List<HeaderItem> headerItems = new ArrayList<HeaderItem>();
+	private List<Record<String>> rows;	
+	private List<HeaderItem> headerItems;
 	private int maxRowSize = 0;	
 	private String name = "";
 	
@@ -20,32 +20,40 @@ public class Table {
 		return name;
 	}
 	
-	public void setTable(List<List<String>> table, boolean hasHeader) {
-		int currentRowSize = 0;
+	public void setTable(List<List<String>> table, boolean hasHeader) {		
 		if (table.size() > 0) {
 			if (hasHeader) {
-				List<String> strings = table.get(0);
-				for (String string:strings) {
-					HeaderItem header = new HeaderItem(string);
-					headerItems.add(header);
-				}				
+				setHeader(table.get(0));							
 				table.remove(0);			
 			}
-			if(table.size() > 0) {
-				for(List<String> list:table) {
-					Record<String> record = new Record<String>();
-					currentRowSize = 0;
-					for(String string:list) {
-						record.add(string);
-						currentRowSize++;
-					}
-					rows.add(record);
-					if (currentRowSize > maxRowSize) {
-						maxRowSize = currentRowSize;
-					}
-				}
+			setTableContents(table);
+		}
+	}
+	
+	public void setTableContents(List<List<String>> contents) {
+		rows = new ArrayList<Record<String>>();
+		int currentRowSize = 0;
+		Record<String> record;
+		for(List<String> list:contents) {
+			record = new Record<String>();
+			currentRowSize = 0;
+			for(String string:list) {
+				record.add(string);
+				currentRowSize++;
+			}
+			rows.add(record);
+			if (currentRowSize > maxRowSize) {
+				maxRowSize = currentRowSize;
 			}
 		}
+	}
+	
+	public void setHeader(List<String> headerNames) {
+		headerItems = new ArrayList<HeaderItem>();
+		for (String string:headerNames) {
+			HeaderItem header = new HeaderItem(string);
+			headerItems.add(header);
+		}	
 	}
 	
 	public void setName(String name) {

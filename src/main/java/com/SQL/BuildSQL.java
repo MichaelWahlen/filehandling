@@ -1,11 +1,12 @@
 package main.java.com.SQL;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 import main.java.com.util.StringUtil;
 
 public class BuildSQL {
+	
 	public static String getCreateTableString(String tableName, List<String> columnNames, boolean hasAutoIncrement) {
 		String returnValue = "";
 		String columns = StringUtil.toCommaSeperatedList(columnNames);
@@ -45,21 +46,31 @@ public class BuildSQL {
     	return stringBuilder.toString();
     }
     
-    public static String getInnerJoinString(List<String> joinColumn, List<String> tableNames) {
+    public static String getInnerJoinSelect(List<String> joinColumn, List<String> tableNames) {
     	String returnValue = "SELECT * FROM " +tableNames.get(0);
     	for(int i = 1; i <tableNames.size();i++) {
     		returnValue = returnValue + " JOIN " + tableNames.get(i) + " ON " + tableNames.get(i -1) + "."+ joinColumn.get(i-1)+" = " + tableNames.get(i)+ "."+ joinColumn.get(i);
     	}    	
-    	return returnValue;//+ " WHERE " + tableNames.get(0)+"."+joinColumn.get(0) + " IN (\"aardsda01\",\"abercda01\")" ;    	
+    	return returnValue;   	
     }
     
-    public static List<String> addIndexOnTable(List<String> joinColumn, List<String> tableNames) {
-    	String returnString = "";
-    	List<String> returnValue = new ArrayList<String>();
-    	for(int i =0; i < tableNames.size();i++) {
-    		returnString = "ALTER TABLE "+ tableNames.get(i)+ " ADD INDEX (" + joinColumn.get(i)+"); ";
-    		returnValue.add(returnString);
-    	}    	
-    	return returnValue;
+    public static String getCreateAsSQL(String tableName,String nativeSQL) {    	
+    	return "CREATE TABLE " + tableName+" AS (" + nativeSQL +")";
+    }
+    
+    public static String addIndexOnTable(String joinColumn, String tableName) {   	
+    	return "ALTER TABLE "+ tableName+ " ADD INDEX (" + joinColumn+"); ";
+    }
+    
+    public static String getDrop(String tableName) {    	
+    	return "DROP TABLE "+tableName;    			
+    }
+    
+    public static String getSelect(String tableName) {
+    	return "SELECT * FROM " + tableName +";";
+    }
+    
+    public static String getColumnNames(String tableName) {
+    	return "SELECT column_name FROM information_schema.columns WHERE table_name in ('" + tableName+"');";
     }
 }
