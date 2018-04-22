@@ -23,14 +23,19 @@ public class Database {
 			List<List<String>> stringLists = new ArrayList<List<String>>();
 			for(String string: strings) {				
 				stringLists.add(StringUtil.decomposeValueSeperatedString(string, delimiter));
-			}
-			Table newTable = new Table();
+			}			
 			String key = entry.getKey().toUpperCase();
-			newTable.setTable(stringLists, true);
+			Table newTable = new Table();
+			newTable.setTable(stringLists, hasHeader);
 			newTable.setName(key);
 			tables.put(key, newTable);			
 		}			
 	}
+	
+	public void setHeaderType(String tableName, String columnName, String type, int length) {
+		tables.get(tableName).setHeaderType(columnName,type,length);
+	}
+	
 	
 	public Map<String, Table> getTables(){
 		return tables;
@@ -42,10 +47,10 @@ public class Database {
 		}
 	}
 	
-	public void commitTable(String name) {
-		Table retrievedTable = tables.get(name.toUpperCase());
-		String createSQL = BuildSQL.getCreateTableString(name, retrievedTable.getHeader(), true);
-		String insertSQL = BuildSQL.getInsertString(name, retrievedTable.getTableContents(), true);		
+	public void commitTable(String tableName) {
+		Table retrievedTable = tables.get(tableName.toUpperCase());
+		String createSQL = BuildSQL.getCreateTableString(tableName, retrievedTable.getHeader(), true);
+		String insertSQL = BuildSQL.getInsertString(tableName, retrievedTable.getTableContents(), true);		
 		PerformSQL.performDDL(createSQL);		
 		PerformSQL.performDDL(insertSQL);	
 	}
@@ -63,7 +68,7 @@ public class Database {
 	
 	public List<String> retrieveTableContent(String tableName) {
 		List<String> returnValue = PerformSQL.performSelect(BuildSQL.getSelect(tableName));	
-		returnValue.add(0,PerformSQL.getColumnNames(BuildSQL.getColumnNames(tableName)));
+		returnValue.add(0,getColumnNames(tableName));
 		return returnValue;		
 	}
 	
@@ -74,7 +79,11 @@ public class Database {
 		}		
 	}
 	
-	public List<String> getTableNames(){
-		return null;		
+	public String getTableNames(){
+		return PerformSQL.getSingle(BuildSQL.getTableNames());		
+	}
+	
+	public String getColumnNames(String tableName){
+		return PerformSQL.getSingle(BuildSQL.getColumnNames(tableName));		
 	}
 }

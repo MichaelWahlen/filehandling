@@ -19,30 +19,28 @@ public class BuildSQL {
 	}
 	
     public static String getInsertString(String tableName, List<List<String>> data, boolean hasAutoIncrement) {    	
-    	StringBuilder stringBuilder = new StringBuilder("INSERT INTO " + tableName.toUpperCase() + " VALUES ");
-    	if (data.size()>0) {    		    		
-    		List<String> list;
-    		for (int j = 0 ; j < data.size() - 1; j++) {    		
-    			list = data.get(j);
-    			stringBuilder.append('(');
-    			if (hasAutoIncrement) {
-    				stringBuilder.append("0,");    				
-    			} 
-    			for(int i=0; i < list.size() - 1;i++) {    				
-    				stringBuilder.append("\""+list.get(i)+"\",");    				
-    			}
-    			stringBuilder.append("\""+list.get(list.size()-1)+"\""+"),");     			
-    		}  
-    		list = data.get(data.size() - 1);
+    	StringBuilder stringBuilder = new StringBuilder("INSERT INTO " + tableName.toUpperCase() + " VALUES ");    	 		    		
+		List<String> list;
+		for (int j = 0 ; j < data.size() - 1; j++) {    		
+			list = data.get(j);
 			stringBuilder.append('(');
 			if (hasAutoIncrement) {
 				stringBuilder.append("0,");    				
 			} 
 			for(int i=0; i < list.size() - 1;i++) {    				
-				stringBuilder.append("\""+list.get(i)+"\",");       				
+				stringBuilder.append("\""+list.get(i)+"\",");    				
 			}
-			stringBuilder.append("\""+list.get(list.size()-1)+"\""+");");					
-    	}
+			stringBuilder.append("\""+list.get(list.size()-1)+"\""+"),");     			
+		}  
+		list = data.get(data.size() - 1);
+		stringBuilder.append('(');
+		if (hasAutoIncrement) {
+			stringBuilder.append("0,");    				
+		} 
+		for(int i=0; i < list.size() - 1;i++) {    				
+			stringBuilder.append("\""+list.get(i)+"\",");       				
+		}
+		stringBuilder.append("\""+list.get(list.size()-1)+"\""+");");
     	return stringBuilder.toString();
     }
     
@@ -55,7 +53,7 @@ public class BuildSQL {
     }
     
     public static String getCreateAsSQL(String tableName,String nativeSQL) {    	
-    	return "CREATE TABLE " + tableName+" AS (" + nativeSQL +")";
+    	return "CREATE TABLE " + tableName +" AS (" + nativeSQL +")";
     }
     
     public static String addIndexOnTable(String joinColumn, String tableName) {   	
@@ -72,5 +70,9 @@ public class BuildSQL {
     
     public static String getColumnNames(String tableName) {
     	return "SELECT column_name FROM information_schema.columns WHERE table_name in ('" + tableName+"');";
+    }
+    
+    public static String getTableNames() {
+    	return "SELECT table_name FROM information_schema.tables where table_schema='localetl';";
     }
 }

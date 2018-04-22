@@ -50,10 +50,9 @@ public class PerformSQL {
 			session = getSessionFactory().openSession();
 			@SuppressWarnings("unchecked")
 			Query<Object[]> query = session.createNativeQuery(nativeSql);
-			List<Object[]> queryResult = query.getResultList();
-			int count = 0;					
+			List<Object[]> queryResult = query.getResultList();								
 			for (Object[] objects: queryResult) {				
-				StringBuilder returnString = new StringBuilder(count + "");
+				StringBuilder returnString = new StringBuilder("");
 				for(Object object: objects) {
 					if (object instanceof Integer) {
 						returnString.append("," + Integer.toString((Integer) object));						
@@ -64,7 +63,7 @@ public class PerformSQL {
 						returnString.append(","+object);
 					}
 				}
-				returnValue.add(returnString.toString());
+				returnValue.add(returnString.toString().substring(1));
 			}			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -76,7 +75,7 @@ public class PerformSQL {
 		return returnValue;
 	}
 	
-	public static String  getColumnNames(String nativeSql) {		
+	public static String getSingle(String nativeSql) {		
 		Session session = null;
 		String returnValue = "";
 		try{
@@ -86,10 +85,11 @@ public class PerformSQL {
 			List<Object[]> queryResult = query.getResultList();
 			Object test = queryResult.get(0);
 			if(test instanceof String) {
-				returnValue = "ID";
+				//returnValue = "ID";
 				for(Object string: queryResult) {
 					returnValue = returnValue + ","+string;
-				}								
+				}
+				returnValue = returnValue.substring(1);
 			}			
 		} catch(Exception e) {
 			e.printStackTrace();

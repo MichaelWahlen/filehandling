@@ -98,11 +98,7 @@ class TableTest {
 				()->{table.getRow(4).get(2);});
 		assertEquals(table.getRowStatus(1),DataStatus.UNCHANGED_OK);
 		assertEquals(table.getRowStatus(3),DataStatus.UNCHANGED_OK);
-		assertEquals(table.getRowStatus(4),DataStatus.UNCHANGED_OK);
-		table.applyHeaderSize();		
-		assertThrows(IndexOutOfBoundsException.class,				
-				()->{table.getRow(3).get(3);});
-		assertNull(table.getRow(4).get(2));
+		assertEquals(table.getRowStatus(4),DataStatus.UNCHANGED_OK);	
 		assertEquals(table.getRowStatus(1),DataStatus.UNCHANGED_OK);
 		assertEquals(table.getRowStatus(3),DataStatus.FAULTY);
 		assertEquals(table.getRowStatus(4),DataStatus.FAULTY);

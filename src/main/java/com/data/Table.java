@@ -1,7 +1,10 @@
 package main.java.com.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import main.java.com.util.StringUtil;
 
@@ -9,7 +12,7 @@ import main.java.com.util.StringUtil;
 public class Table {	
 	
 	private List<Record<String>> rows;	
-	private List<HeaderItem> headerItems;
+	private Map<String, HeaderItem> headerItemsz;
 	private int maxRowSize = 0;	
 	private String name = "";
 	
@@ -28,6 +31,11 @@ public class Table {
 			}
 			setTableContents(table);
 		}
+	}
+	
+	public void setHeaderType(String columnName, String type, int length) {
+		headerItemsz.get(columnName).setType(type);
+		headerItemsz.get(columnName).setLength(length);
 	}
 	
 	public void setTableContents(List<List<String>> contents) {
@@ -49,10 +57,12 @@ public class Table {
 	}
 	
 	public void setHeader(List<String> headerNames) {
-		headerItems = new ArrayList<HeaderItem>();
+		headerItemsz = new HashMap<String, HeaderItem>();
+		int location = 0;
 		for (String string:headerNames) {
-			HeaderItem header = new HeaderItem(string);
-			headerItems.add(header);
+			HeaderItem header = new HeaderItem(string.toUpperCase(), location);
+			headerItemsz.put(string.toUpperCase(), header);
+			location++;
 		}	
 	}
 	
@@ -60,11 +70,6 @@ public class Table {
 		this.name = StringUtil.extractAlphaNumeric(name).toUpperCase();
 	}
 	
-	public void applyHeaderSize() {		
-		for(Record<String> row:rows) {
-			row.setPrescribedSize(headerItems.size());
-		}		
-	}
 	
 	public List<List<String>> getTableContents(){
 		List<List<String>> returnList = new ArrayList<List<String>>();				
@@ -118,8 +123,12 @@ public class Table {
 	
 	public List<String> getHeader() {
 		List<String> returnValue = new ArrayList<String>();
-		for(HeaderItem headerItem:headerItems) {
-			returnValue.add(headerItem.toString(name));
+		String[] holder = new String[headerItemsz.size()];
+		for(Entry<String, HeaderItem> entry: headerItemsz.entrySet()) {			
+			holder[entry.getValue().getLocation()] = entry.getValue().toString(name);
+		}
+		for(String string: holder) {
+			returnValue.add(string);
 		}		
 		return returnValue;
 	}

@@ -24,14 +24,13 @@ public class StringUtil {
     } 
     
     public static String toCommaSeperatedList(List<String> strings) {
-    	String returnValue = "";
+    	StringBuilder returnValue = new StringBuilder();    	
     	if (strings.size() > 0) {    		
     		for (String string: strings) {
-    			returnValue = returnValue + "," + string;
-    		}
-    		returnValue = returnValue.substring(1);
+    			returnValue.append("," + string);
+    		}    		
     	}
-    	return returnValue;
+    	return returnValue.toString().substring(1);
     }
     
 

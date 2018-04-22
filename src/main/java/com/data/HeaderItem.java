@@ -7,15 +7,29 @@ public class HeaderItem {
 	private String name;
 	private int length;	
 	private String type;
+	private int location;
 	
-	public HeaderItem(String name) {
+	public HeaderItem(String name, int location) {
 		setType("VARCHAR");
 		setLength(255);		
 		setName(name);
+		setLocation(location);
 	}
 	
 	public String toString(String preface) {
-		return preface+"_"+this.name + " "+ this.type + "(" + this.length + ")";
+		String lengthAddition = "";
+		if(this.length != 0) {
+			lengthAddition = "(" + this.length + ")";
+		}		
+		return preface+"_"+this.name + " "+ this.type + lengthAddition;
+	}
+	
+	public void setLocation(int location) {
+		this.location = location;
+	}
+	
+	public int getLocation() {
+		return this.location;
 	}
 	
 	public void setName(String name) {
