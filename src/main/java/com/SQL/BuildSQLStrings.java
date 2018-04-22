@@ -5,7 +5,7 @@ import java.util.List;
 
 import main.java.com.util.StringUtil;
 
-public class BuildSQL {
+public class BuildSQLStrings {
 	
 	public static String getCreateTableString(String tableName, List<String> columnNames, boolean hasAutoIncrement) {
 		String returnValue = "";

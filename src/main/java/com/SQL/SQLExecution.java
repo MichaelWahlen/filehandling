@@ -1,4 +1,5 @@
 package main.java.com.SQL;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +9,42 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
-
-public class PerformSQL {
+public class SQLExecution {
+	
+	
+	private static void addIndexes(List<String> key, List<String> tableNames) {
+		for(int i = 0 ; i<tableNames.size();i++) {
+			performDDL(BuildSQLStrings.addIndexOnTable(key.get(i), tableNames.get(i)));			
+		}		
+	}
+	
+	public static void commitInnerJoin(String tableName,List<String> key, List<String> tableNames){
+		addIndexes(key,tableNames);		
+		performDDL(BuildSQLStrings.getCreateAsSQL(tableName,BuildSQLStrings.getInnerJoinSelect(key, tableNames)));
+	}
+	
+	public static List<String> retrieveTableContent(String tableName) {
+		List<String> returnValue = performSelect(BuildSQLStrings.getSelect(tableName));	
+		returnValue.add(0,getColumnNames(tableName));
+		return returnValue;		
+	}
+	
+	public static String getTableNames(){
+		return getSingle(BuildSQLStrings.getTableNames());		
+	}
+	
+	public static String getColumnNames(String tableName){
+		return getSingle(BuildSQLStrings.getColumnNames(tableName));		
+	}
+	
+	
+	public static void dropTables(List<String> tableNames) {
+		for(String string: tableNames) {
+			String SQL = BuildSQLStrings.getDrop(string);
+			SQLExecution.performDDL(SQL);
+		}		
+	}
+	
 	private static final SessionFactory sessionFactory;
 	static{
 		try{
@@ -85,7 +120,7 @@ public class PerformSQL {
 			List<Object[]> queryResult = query.getResultList();
 			Object test = queryResult.get(0);
 			if(test instanceof String) {
-				//returnValue = "ID";
+				
 				for(Object string: queryResult) {
 					returnValue = returnValue + ","+string;
 				}
@@ -100,5 +135,4 @@ public class PerformSQL {
 		}
 		return returnValue;
 	}
-
 }
