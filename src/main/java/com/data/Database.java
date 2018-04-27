@@ -19,7 +19,7 @@ public class Database {
 	public void addCSVData(boolean hasHeader, Map<String, List<String>> tableContents, char delimiter) {		
 		for(Map.Entry<String, List<String>> entry : tableContents.entrySet()) {
 			List<String> strings = entry.getValue();
-			List<List<String>> stringLists = new ArrayList<List<String>>();
+			List<List<String>> stringLists = new ArrayList<List<String>>();			
 			for(String string: strings) {				
 				stringLists.add(StringUtil.decomposeValueSeperatedString(string, delimiter));
 			}			

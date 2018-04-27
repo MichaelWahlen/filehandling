@@ -1,10 +1,11 @@
-package main.java.com.file;
+package main.java.com.parser;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,9 +22,99 @@ public class ParserXML implements Parser {
 	private int startRow = 0;
 
 	@Override
-	public void parseToMemory(File sourceFile) {
-		// TODO Auto-generated method stub
+	public List<String> parseToStrings(File sourceFile) {
+		List<String> strings = new ArrayList<String>();
+		Set<String> attributeHeader = new HashSet<String>();
+		XMLInputFactory xf;
+	    XMLStreamReader xsr;	    
+		int count = 0;
+		try {
+	    	 xf=XMLInputFactory.newInstance();
+	    	 xsr = xf.createXMLStreamReader(new InputStreamReader(new FileInputStream(sourceFile)));
+	    	 while (xsr.hasNext()) {		    	 			    	 
+	    	 	if(count >= startRow) {		    	    
+		    	    switch (xsr.getEventType()) {
+		    	    case XMLStreamConstants.START_ELEMENT:		    	    	
+		    		    for (int i=0; i < xsr.getAttributeCount(); i++) {				    		    			   
+			    			attributeHeader.add(xsr.getAttributeLocalName(i));					    			
+		    			}			    				    			 		    	  
+		    	    break;
+	    	 		}
+	    	 	}
+	    	    xsr.next();
+	    	    count++;
+		    }	
+		    xsr.close();
+		} catch (Exception e1) {	
+			e1.printStackTrace();
+		}
+		int countOfHeaderElements = 0;
+		Map<String, Integer> headerAndLocation = new HashMap<String, Integer>();		
+		Iterator<String> iterator = attributeHeader.iterator();
+		while(iterator.hasNext()) {
+			String setElement = iterator.next();	        
+			headerAndLocation.put(setElement, countOfHeaderElements);
+			countOfHeaderElements++;
+		}		
+			
+		int numberofItems = headerAndLocation.size();
+		String[] headers = new String[numberofItems];
+		for(Map.Entry<String, Integer> entry: headerAndLocation.entrySet()) {
+			headers[entry.getValue()] = entry.getKey();
+		}
+		String headerString = "";
+		for(String string: headers) {
+			headerString = headerString +"," + string;
+		}		
+		try {
+	    	xf=XMLInputFactory.newInstance();	  
+			xsr = xf.createXMLStreamReader(new InputStreamReader(new FileInputStream(sourceFile)));			
+			strings.add(headerString.substring(1));			
+			count =0;
+			    while (xsr.hasNext()) {
+			    		headers = new String[numberofItems];			    		
+			    	 	if(count >= startRow) {
+			    	    switch (xsr.getEventType()) {
+			    	    case XMLStreamConstants.START_ELEMENT:
+			    	    	String abc = "";
+			    		    for (int i=0; i < xsr.getAttributeCount(); i++) {			    		    	
+				    			    String value = xsr.getAttributeValue(i);				    			   
+				    			    headers[headerAndLocation.get(xsr.getAttributeLocalName(i))] =  value;				    			   
+			    			}
+			    		    for(String string: headers) {
+			    		    	 abc = abc +","+ string;
+			    		    }			    		    
+			    		    strings.add(abc.substring(1));
+			    			     	  
+			    	    break;
+			    	    case XMLStreamConstants.END_ELEMENT:
+			    	    break;
+			    	    case XMLStreamConstants.SPACE:
+			    	    break;	
+			    	    case XMLStreamConstants.CHARACTERS:
+			    	    break;
+			    	    case XMLStreamConstants.PROCESSING_INSTRUCTION:
+			    	    break;
+			    	    case XMLStreamConstants.CDATA:			    	     
+			    	    break;
+			    	    case XMLStreamConstants.COMMENT:			    	      
+			    	    break;
+			    	    case XMLStreamConstants.ENTITY_REFERENCE:
+			    	   	break;
+			    	    case XMLStreamConstants.START_DOCUMENT:		    	      
+			    	    break;
+			    	    }
+			    	 	}
+			    	    xsr.next();
+			    	    count++;
+			    }	
+			    xsr.close();
+			   
+		}  catch (Exception e1) {	
+			e1.printStackTrace();
+		}	
 		
+		return strings;		
 	}
 
 	@Override
@@ -34,6 +125,9 @@ public class ParserXML implements Parser {
 
 	@Override
 	public void parseToCSV(File sourceFile, File targetFile) {
+		if(targetFile.exists()) {
+			targetFile.delete();
+		}
 		Set<String> attributeHeader = new HashSet<String>();
 		XMLInputFactory xf;
 	    XMLStreamReader xsr;	    
@@ -124,16 +218,9 @@ public class ParserXML implements Parser {
 			    }	
 			    xsr.close();
 			    out.close();		
-		}  catch (Exception e1) {
-	
+		}  catch (Exception e1) {	
 			e1.printStackTrace();
 		}		
-	}
-
-	@Override
-	public List<String> getInMemoryParse() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

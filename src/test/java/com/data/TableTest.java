@@ -100,12 +100,10 @@ class TableTest {
 		assertEquals(table.getRowStatus(3),DataStatus.UNCHANGED_OK);
 		assertEquals(table.getRowStatus(4),DataStatus.UNCHANGED_OK);	
 		assertEquals(table.getRowStatus(1),DataStatus.UNCHANGED_OK);
-		assertEquals(table.getRowStatus(3),DataStatus.FAULTY);
-		assertEquals(table.getRowStatus(4),DataStatus.FAULTY);
 		List<List<String>> tableContents = table.getTableContents();
 		tableContents.add(0, table.getHeader());
 		assertEquals(tableContents.size(),6);
-		assertEquals(tableContents.get(5).size(),3);
+		assertEquals(tableContents.get(5).size(),2);
 	}
 	
 	@Test

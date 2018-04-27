@@ -1,1 +1,7 @@
 /target/
+src/test/resources/Mixed/UNZIPPED/20180329.COVISN.xml
+*.CSV
+*.gz
+*.txt
+*.xml
+*.xlsx

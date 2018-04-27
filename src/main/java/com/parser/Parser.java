@@ -1,14 +1,13 @@
-package main.java.com.file;
+package main.java.com.parser;
 
 import java.io.File;
 import java.util.List;
 
 public interface Parser {
 	
-	public void parseToMemory(File sourceFile); 
+	public List<String> parseToStrings(File sourceFile); 
 	public void parseToDB(File sourceFile, String tableName);
 	public void parseToCSV(File sourceFile, File targetFile);
-	public void setStartRow(int row);
-	public List<String> getInMemoryParse();
+	public void setStartRow(int startingElement);	
 
 }

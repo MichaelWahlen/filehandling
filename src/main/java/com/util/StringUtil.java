@@ -9,13 +9,16 @@ public class StringUtil {
 		List<String> row = new ArrayList<String>();
 		char[] searchArray = sourceString.toCharArray();
 		int startPosition = 0;
+		String addString;
 		for (int i =0; i < searchArray.length;i++) {
 			if(searchArray[i]==delimiter) {			
-				row.add(sourceString.substring(startPosition,i));			
+				addString = sourceString.substring(startPosition,i).replace("'", "");
+				addString = addString.replace("\"", "");
+				row.add(addString);			
 				startPosition = i + 1;			
 			}
 		}
-		row.add(sourceString.substring(startPosition));	
+		row.add(sourceString.substring(startPosition).replace("\"", ""));	
 		return row;
 	}
 	
@@ -34,7 +37,13 @@ public class StringUtil {
     }
     
     public static String getUpperCaseNameWithoutExtension(String source) {
-    	return source.substring(0,source.lastIndexOf(".")).toUpperCase();
+    	String returnValue;
+    	if(source.lastIndexOf(".") == -1) {
+    		returnValue = source.toUpperCase();
+    	} else {
+    		returnValue = source.substring(0,source.lastIndexOf(".")).toUpperCase(); 
+    	}
+    	return returnValue;
     	
     }
     

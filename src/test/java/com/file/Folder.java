@@ -31,19 +31,19 @@ class Folder {
 	
 	@Test
 	void loadAllCount() {
-		baseballFolder.loadFilesIntoMemory("","csv");
-		assertEquals(baseballFolder.getAllFiles().size(),27);
-		tweetFolder.loadFilesIntoMemory("","txt");
-		assertEquals(tweetFolder.getAllFiles().size(),1);
+		baseballFolder.parseAllToMemory(0);
+		assertEquals(baseballFolder.getAllInMemoryFiles().size(),27);
+		tweetFolder.parseAllToMemory(0);
+		assertEquals(tweetFolder.getAllInMemoryFiles().size(),1);
 	}
 	
 	@Test
 	void loadAllContentCount() {
-		baseballFolder.loadFilesIntoMemory("","csv");
-		List<String> returns = baseballFolder.getAllFiles().get("PITCHING");		
+		baseballFolder.parseAllToMemory(0);
+		List<String> returns = baseballFolder.getAllInMemoryFiles().get("PITCHING");		
 		assertEquals(45807,returns.size());
-		tweetFolder.loadFilesIntoMemory("","txt");
-		returns = tweetFolder.getAllFiles().get("BBCHEALTH");
+		tweetFolder.parseAllToMemory(0);
+		returns = tweetFolder.getAllInMemoryFiles().get("BBCHEALTH");
 		assertEquals(3929,returns.size());
 	}
 	
