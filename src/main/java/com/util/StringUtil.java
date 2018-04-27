@@ -33,5 +33,13 @@ public class StringUtil {
     	return returnValue.toString().substring(1);
     }
     
+    public static String getUpperCaseNameWithoutExtension(String source) {
+    	return source.substring(0,source.lastIndexOf(".")).toUpperCase();
+    	
+    }
+    
+    public static String getExtension(String source) {
+    	return source.substring(source.lastIndexOf(".")+1).toUpperCase();    	
+    }
 
 }

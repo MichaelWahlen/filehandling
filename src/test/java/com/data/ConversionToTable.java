@@ -24,12 +24,13 @@ class ConversionToTable {
 	@BeforeEach
 	public void setUp() throws Exception {		
 		baseballFolder = new LocalFolder("src//test//resources//BaseBallTestData");
-		baseballFolder.loadContainedFiles("","csv");		
-		database.addCSVData(true, baseballFolder.getFile("ALLSTARFULL"), ',');
-		database.addCSVData(true, baseballFolder.getFile("PARKS"), ',');
-		database.addCSVData(true, baseballFolder.getFile("APPEARANCES"), ',');
-		database.addCSVData(true, baseballFolder.getFile("PEOPLE"), ',');
-		
+		baseballFolder.loadFilesIntoMemory("","csv");
+		List<String> fileNames = new ArrayList<String>();
+		fileNames.add("ALLSTARFULL");
+		fileNames.add("PARKS");
+		fileNames.add("APPEARANCES");
+		fileNames.add("PEOPLE");
+		database.addCSVData(true, baseballFolder.getFiles(fileNames), ',');		
 	}
 	@Test
 	void convertFile() {

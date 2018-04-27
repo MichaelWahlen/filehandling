@@ -23,7 +23,7 @@ public class Database {
 			for(String string: strings) {				
 				stringLists.add(StringUtil.decomposeValueSeperatedString(string, delimiter));
 			}			
-			String key = entry.getKey().toUpperCase();
+			String key = StringUtil.getUpperCaseNameWithoutExtension(entry.getKey());
 			Table newTable = new Table();
 			newTable.setTable(stringLists, hasHeader);
 			newTable.setName(key);
