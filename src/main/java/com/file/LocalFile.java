@@ -73,6 +73,6 @@ public class LocalFile {
     }
 
     public String getFileName() {
-           return StringUtil.getUpperCaseNameWithoutExtension(internalFile.getName());
+           return StringUtil.getAlphaNumericUpperCaseNameWithoutExtension(internalFile.getName());
     }
 }

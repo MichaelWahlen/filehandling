@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import main.java.com.file.LocalFile;
 
-class TestFile {
+class MyFile {
 	
 	String baseballFolderPath = "src//test//resources//BaseBallTestData//";	
 	String tweetFolderPath = "src//test//resources//Tweets//";

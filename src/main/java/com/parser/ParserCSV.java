@@ -16,21 +16,21 @@ public class ParserCSV implements Parser{
 
 	@Override
 	public List<String> parseToStrings(File sourceFile) {
-		 BufferedReader   reader					= null;
-	        String           line                 	= null;
-	        List<String> parsedRows  							= new ArrayList<String>();
-			try {
-				reader = new BufferedReader(new FileReader (sourceFile.getPath()));
-				for(int i = 0 ; i<startRow;i++) {
-					reader.readLine();
-				}				
-				while((line = reader.readLine()) != null) {
-	                parsedRows.add(line);
-	            }
-				reader.close();
-			} catch (Exception e) {			
-				e.printStackTrace();
-			}       
+		BufferedReader reader = null;
+	    String line = null;
+	    List<String> parsedRows = new ArrayList<String>();
+		try {
+			reader = new BufferedReader(new FileReader (sourceFile.getPath()));
+			for(int i = 0 ; i<startRow;i++) {
+				reader.readLine();
+			}				
+			while((line = reader.readLine()) != null) {
+                parsedRows.add(line);
+            }
+			reader.close();
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}       
 		return parsedRows;		
 	}
 

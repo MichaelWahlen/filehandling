@@ -173,8 +173,7 @@ public class ParserXML implements Parser {
 		
 		try {
 	    	xf=XMLInputFactory.newInstance();		   
-			PrintWriter out = null;
-	    	out = new PrintWriter(new BufferedWriter(new FileWriter(targetFile, true)));
+			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(targetFile, true)));
 			xsr = xf.createXMLStreamReader(new InputStreamReader(new FileInputStream(sourceFile)));			
 			out.write(headerString.substring(1));
 			out.write("\n");

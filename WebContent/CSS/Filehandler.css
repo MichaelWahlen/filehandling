@@ -1,0 +1,8 @@
+@charset "ISO-8859-1";
+
+.listItem {
+	padding-left: 30%;
+    background-color: coral;
+    color: red;
+}
+

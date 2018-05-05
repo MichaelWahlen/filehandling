@@ -3,13 +3,13 @@ package main.java.com.data;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Record<T> {
+public class Row<T> {
 	private List<Cell<T>> cells = new ArrayList<Cell<T>>(); 
 	private int prescribedSize = 0;
 	private boolean isIncomplete = false;
 	private boolean isTooLarge = false;
 	
-	public Record (){		
+	public Row (){		
 	}
 	
 	public void changeValueAt(int location, T newValue, boolean isValid) {

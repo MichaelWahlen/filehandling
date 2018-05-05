@@ -16,23 +16,22 @@ public class Database {
 	public Database() {		
 	}
 	
-	public void addCSVData(boolean hasHeader, Map<String, List<String>> tableContents, char delimiter) {		
+	public void addCSVData(Map<String, List<String>> tableContents, char delimiter) {		
 		for(Map.Entry<String, List<String>> entry : tableContents.entrySet()) {
 			List<String> strings = entry.getValue();
 			List<List<String>> stringLists = new ArrayList<List<String>>();			
 			for(String string: strings) {				
 				stringLists.add(StringUtil.decomposeValueSeperatedString(string, delimiter));
 			}			
-			String key = StringUtil.getUpperCaseNameWithoutExtension(entry.getKey());
 			Table newTable = new Table();
-			newTable.setTable(stringLists, hasHeader);
-			newTable.setName(key);
-			tables.put(key, newTable);			
+			newTable.setTable(stringLists);
+			newTable.setName(entry.getKey());
+			tables.put(entry.getKey(), newTable);			
 		}			
 	}
 	
 	public void setHeaderType(String tableName, String columnName, String type, int length) {
-		tables.get(tableName).setHeaderType(columnName,type,length);
+		tables.get(tableName).setColumnType(columnName,type,length);
 	}
 	
 	

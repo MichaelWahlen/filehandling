@@ -13,7 +13,7 @@ import main.java.com.util.Unzip;
 
 public class LocalFolder {
 
-	private HashMap<String,LocalFile> loadedFiles = null;
+	private HashMap<String,LocalFile> inMemoryFiles = null;
 	private File sourceFolder = null;
 	private File extractedFolder = null;
 	private File parsedFolder = null;
@@ -24,20 +24,20 @@ public class LocalFolder {
 	} 
 	
 	public void setContentDirectory(String path) {
-		loadedFiles = null;
+		inMemoryFiles = null;
 		File tempFile = new File(path);		
 		if (tempFile.exists() && tempFile.isDirectory()) {
 			sourceFolder = new File(path);
 			extractedFolder = new File(path+"\\UNZIPPED");
 			parsedFolder = new File(path+"\\PARSED");
 			zippedFolder = new File(path+"\\ZIPPED");
-			loadedFiles = new HashMap<String, LocalFile>();
+			inMemoryFiles = new HashMap<String, LocalFile>();
 		}		
 	}
 	
 	public HashMap<String, List<String>> getAllInMemoryFiles() {			
 		List<String> fileNames =  new ArrayList<String>();
-		for(Map.Entry<String, LocalFile> entry : loadedFiles.entrySet()) {
+		for(Map.Entry<String, LocalFile> entry : inMemoryFiles.entrySet()) {
 			fileNames.add(entry.getKey());			
 		}			
 		return getInMemoryFiles(fileNames);
@@ -46,9 +46,9 @@ public class LocalFolder {
 	public HashMap<String, List<String>> getInMemoryFiles(List<String> fileNames) {		
 		HashMap<String, List<String>> filesContents = new HashMap<String, List<String>>();		
 		for(String fileName:fileNames) {			
-			LocalFile file = loadedFiles.get(fileName);
+			LocalFile file = inMemoryFiles.get(StringUtil.getAlphaNumericUpperCaseNameWithoutExtension(fileName));
 			if(file != null) {								
-				filesContents.put(fileName,file.getParsedRows());
+				filesContents.put(StringUtil.getAlphaNumericUpperCaseNameWithoutExtension(fileName),file.getParsedRows());
 			}	
 		}			
 		return filesContents;
@@ -56,7 +56,7 @@ public class LocalFolder {
 	
 	public List<String> getInMemoryFileNames(){
 		List<String> fileNames = new ArrayList<String>();
-		for(Map.Entry<String, LocalFile> entry: loadedFiles.entrySet()) {
+		for(Map.Entry<String, LocalFile> entry: inMemoryFiles.entrySet()) {
 			fileNames.add(entry.getKey());
 		}
 		return fileNames;
@@ -67,7 +67,7 @@ public class LocalFolder {
 			if (file.exists()&&!file.isDirectory()) {
 				LocalFile newFile = new LocalFile(file);
 				newFile.loadToMemory(parseAsOfRow);
-				loadedFiles.put(StringUtil.getUpperCaseNameWithoutExtension(file.getName()),newFile);
+				inMemoryFiles.put(StringUtil.getAlphaNumericUpperCaseNameWithoutExtension(file.getName()),newFile);
 			}
 		}		
 	}
@@ -81,20 +81,20 @@ public class LocalFolder {
 		parsedFolder.mkdir();		
 		for(String fileName:fileNames) {
 			File targetFile = new File(parsedFolder,fileName+".CSV");
-			loadedFiles.get(fileName).storeAsCSV(targetFile);	
+			inMemoryFiles.get(fileName).storeAsCSV(targetFile);	
 		}	
 	}
 	
 	public void allInMemoryFilesToCSV(int parseAsOfRow) {					
 		List<String> fileNames = new ArrayList<String>();		
-		for(Map.Entry<String, LocalFile> entry : loadedFiles.entrySet()) {
+		for(Map.Entry<String, LocalFile> entry : inMemoryFiles.entrySet()) {
 			fileNames.add(entry.getKey());
 		}
 		inMemoryFilesToCSV(fileNames,parseAsOfRow);
 	}
 	
 	public void clearInMemoryFiles() {
-		loadedFiles = new HashMap<String, LocalFile>();
+		inMemoryFiles = new HashMap<String, LocalFile>();
 	}
 	
 	public void unzipContainedGZ() {

@@ -2,14 +2,14 @@ package main.java.com.data;
 
 import main.java.com.util.StringUtil;
 
-public class HeaderItem {
+public class Column {
 
 	private String name;
 	private int length;	
 	private String type;
 	private int location;
 	
-	public HeaderItem(String name, int location) {
+	public Column(String name, int location) {
 		setType("VARCHAR");
 		setLength(255);		
 		setName(name);

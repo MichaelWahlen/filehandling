@@ -11,10 +11,11 @@ import main.java.com.util.StringUtil;
 
 public class Table {	
 	
-	private List<Record<String>> rows;	
-	private Map<String, HeaderItem> headerItemsz;
+	private List<Row<String>> rows;	
+	private Map<String, Column> columns;
 	private int maxRowSize = 0;	
 	private String name = "";
+	private int maxRowsInMemory = 500000;
 	
 	public Table() {		
 	}
@@ -23,27 +24,25 @@ public class Table {
 		return name;
 	}
 	
-	public void setTable(List<List<String>> table, boolean hasHeader) {		
-		if (table.size() > 0) {
-			if (hasHeader) {
-				setHeader(table.get(0));							
-				table.remove(0);			
-			}
-			setTableContents(table);
-		}
+	public void setTable(List<List<String>> table) {
+			setHeader(table.get(0));							
+			table.remove(0);		
+			setRows(table);		
 	}
 	
-	public void setHeaderType(String columnName, String type, int length) {
-		headerItemsz.get(columnName).setType(type);
-		headerItemsz.get(columnName).setLength(length);
+	public void setColumnType(String columnName, String type, int length) {
+		columns.get(columnName).setType(type);
+		columns.get(columnName).setLength(length);
 	}
 	
-	public void setTableContents(List<List<String>> contents) {
-		rows = new ArrayList<Record<String>>();
+	public void setRows(List<List<String>> contents) {
+		rows = new ArrayList<Row<String>>();
 		int currentRowSize = 0;
-		Record<String> record;
+		Row<String> record;
+		int max = Math.min(contents.size(), maxRowsInMemory);
+		contents = contents.subList(0, max-1);		
 		for(List<String> list:contents) {
-			record = new Record<String>();
+			record = new Row<String>();
 			currentRowSize = 0;
 			for(String string:list) {
 				record.add(string);
@@ -57,11 +56,11 @@ public class Table {
 	}
 	
 	public void setHeader(List<String> headerNames) {
-		headerItemsz = new HashMap<String, HeaderItem>();
+		columns = new HashMap<String, Column>();
 		int location = 0;
 		for (String string:headerNames) {
-			HeaderItem header = new HeaderItem(string.toUpperCase(), location);
-			headerItemsz.put(string.toUpperCase(), header);
+			Column header = new Column(string.toUpperCase(), location);
+			columns.put(string.toUpperCase(), header);
 			location++;
 		}	
 	}
@@ -73,7 +72,7 @@ public class Table {
 	
 	public List<List<String>> getTableContents(){
 		List<List<String>> returnList = new ArrayList<List<String>>();				
-		for(Record<String> record:rows) {
+		for(Row<String> record:rows) {
 			returnList.add(record.getAll());
 		}		
 		return returnList;
@@ -102,7 +101,7 @@ public class Table {
 	public List<String> getColumn(int column){
 		List<String> returnList = new ArrayList<String>();
 		if(maxRowSize>column) {
-			for(Record<String> record:rows) {
+			for(Row<String> record:rows) {
 				if(record.getSize() > column) {
 					returnList.add(record.getAt(column));
 				} else {
@@ -123,8 +122,8 @@ public class Table {
 	
 	public List<String> getHeader() {
 		List<String> returnValue = new ArrayList<String>();
-		String[] holder = new String[headerItemsz.size()];
-		for(Entry<String, HeaderItem> entry: headerItemsz.entrySet()) {			
+		String[] holder = new String[columns.size()];
+		for(Entry<String, Column> entry: columns.entrySet()) {			
 			holder[entry.getValue().getLocation()] = entry.getValue().toString(name);
 		}
 		for(String string: holder) {

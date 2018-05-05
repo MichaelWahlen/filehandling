@@ -5,3 +5,4 @@ src/test/resources/Mixed/UNZIPPED/20180329.COVISN.xml
 *.txt
 *.xml
 *.xlsx
+/build/

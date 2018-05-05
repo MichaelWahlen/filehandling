@@ -9,6 +9,8 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
+import main.java.com.util.StringUtil;
+
 public class SQLExecution {
 	
 	
@@ -40,7 +42,7 @@ public class SQLExecution {
 	
 	public static void dropTables(List<String> tableNames) {
 		for(String string: tableNames) {
-			String SQL = BuildSQLStrings.getDrop(string);
+			String SQL = BuildSQLStrings.getDrop(StringUtil.getAlphaNumericUpperCaseNameWithoutExtension(string));
 			SQLExecution.performDDL(SQL);
 		}		
 	}

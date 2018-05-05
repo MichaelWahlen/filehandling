@@ -42,7 +42,7 @@ class LoadMixedFiles {
 		baseballFolder.parseAllToMemory(0);
 		Map<String, List<String>> returns = baseballFolder.getAllInMemoryFiles();	
 		assertAll("Should return accurate row nrs for different file types",				
-				() -> assertEquals(11, returns.size())
+				() -> assertEquals(17, returns.size())
 				);
 	}
 	

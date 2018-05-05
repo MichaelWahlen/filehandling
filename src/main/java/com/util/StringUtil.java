@@ -36,14 +36,14 @@ public class StringUtil {
     	return returnValue.toString().substring(1);
     }
     
-    public static String getUpperCaseNameWithoutExtension(String source) {
+    public static String getAlphaNumericUpperCaseNameWithoutExtension(String source) {
     	String returnValue;
     	if(source.lastIndexOf(".") == -1) {
     		returnValue = source.toUpperCase();
     	} else {
     		returnValue = source.substring(0,source.lastIndexOf(".")).toUpperCase(); 
     	}
-    	return returnValue;
+    	return extractAlphaNumeric(returnValue);
     	
     }
     

@@ -30,7 +30,7 @@ class ConversionToTable {
 		fileNames.add("PARKS");
 		fileNames.add("APPEARANCES");
 		fileNames.add("PEOPLE");
-		database.addCSVData(true, baseballFolder.getInMemoryFiles(fileNames), ',');		
+		database.addCSVData(baseballFolder.getInMemoryFiles(fileNames), ',');		
 	}
 	@Test
 	void convertFile() {

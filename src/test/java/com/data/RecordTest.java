@@ -9,15 +9,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import main.java.com.data.DataStatus;
-import main.java.com.data.Record;
+import main.java.com.data.Row;
 
 class RecordTest {
 	
-	Record<String> row;
+	Row<String> row;
 	
 	@BeforeEach
 	public void setUp() throws Exception {
-		row = new Record<String>();
+		row = new Row<String>();
 		row.add("Alia");
 		row.add("Iacta");
 		row.add("Est");		

@@ -32,7 +32,7 @@ class TableTest {
 		table1.add(row3);
 		table1.add(row4);
 		table1.add(row5);
-		table.setTable(table1, true);		
+		table.setTable(table1);		
 	}	
 	
 	@Test
